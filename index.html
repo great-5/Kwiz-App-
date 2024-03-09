@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    
+    body {
+      background-color: #ffe4c4; 
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    #quiz-container {
+      max-width: 600px;
+      width: 80%;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 50px auto;
+      text-align: center;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h3 {
+      margin: 0;
+      padding: 10px;
+      background-color: #696969; 
+      color: #fff;
+      border-radius: 20px;
+    }
+
+    h5 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .option {
+      width: 200px;
+      height: 60px;
+      line-height: 60px;
+      background-color: #ffd700;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      font-size: 24px;
+      margin: 10px 0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease-in-out;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .option:hover {
+      background-color: #d4af37; 
+    }
+
+    #next-button, #prev-button {
+      width: 120px;
+      height: 50px;
+      line-height: 50px;
+      background-color: #008000; 
+      border: 3px solid #ccc;
+      border-radius: 10px;
+      margin-top: 30px;
+      font-size: 20px;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease-in-out;
+      margin-right: 10px;
+    }
+
+    #next-button:hover, #prev-button:hover {
+      background-color: #006400; 
+    }
+
+    .correct {
+      background-color: #4CAF50; 
+    }
+
+    .incorrect {
+      background-color: #f44336; 
+    }
+  </style>
+  <title>Quiz App</title>
+</head>
+<body>
+  <div class="container">
+    <h3>Quiz App</h3>
+
+    <br><br>
+    <h5>Question:</h5>
+
+    <div id="quiz-container">
+      <div id="question1">
+        1. Who was the first developer in history?
+
+        <div class="options-container">
+          <div class="option A" onclick="changeButtonColor('A', 1)">A - Great</div>
+          <div class="option B" onclick="changeButtonColor('B', 1)">B - John</div>
+          <div class="option C" onclick="changeButtonColor('C', 1)">C - May</div>
+        </div>
+      </div>
+
+      <div id="question2" style="display: none;">
+        2. Who invented the World Wide Web?
+
+        <div class="options-container">
+          <div class="option A" onclick="changeButtonColor('A', 2)">A - Tim Berners-Lee</div>
+          <div class="option B" onclick="changeButtonColor('B', 2)">B - John Doe</div>
+          <div class="option C" onclick="changeButtonColor('C', 2)">C - Jane Smith</div>
+        </div>
+      </div>
+
+      <div id="question3" style="display: none;">
+        3. What does HTML stand for?
+
+        <div class="options-container">
+          <div class="option A" onclick="changeButtonColor('A', 3)">A - Hyper Text Markup Language</div>
+          <div class="option B" onclick="changeButtonColor('B', 3)">B - Hyperlinks and Text Markup Language</div>
+          <div class="option C" onclick="changeButtonColor('C', 3)">C - Home Tool Markup Language</div>
+        </div>
+      </div>
+
+      <div id="question4" style="display: none;">
+        4. What year was JavaScript created?
+
+        <div class="options-container">
+          <div class="option A" onclick="changeButtonColor('A', 4)">A - 1995</div>
+          <div class="option B" onclick="changeButtonColor('B', 4)">B - 2000</div>
+          <div class="option C" onclick="changeButtonColor('C', 4)">C - 2005</div>
+        </div>
+      </div>
+      
+
+    </div>
+
+    <div>
+      <button id="prev-button" onclick="previousQuestion()">Previous</button>
+      <button id="next-button" onclick="nextQuestion()">Next</button>
+    </div>
+
+
+    <div id="result" style="display: none;">
+      <h5 id="result-message"></h5>
+    </div>
+  </div>
+
+ 
+  <script>
+  
+    let currentQuestion = 1;
+    let correctAnswers = 0;
+
+    function changeButtonColor(answer, questionNumber) {
+      
+      const selectedOption = document.querySelector(`#question${questionNumber} .option.${answer}`);
+      if (selectedOption.classList.contains('correct')) return; 
+      const correctAnswer = (questionNumber === 1 && answer === 'A') || (questionNumber === 2 && answer === 'B') ||
+        (questionNumber === 3 && answer === 'A') || (questionNumber === 4 && answer === 'A');
+      if (correctAnswer) {
+        selectedOption.classList.add('correct');
+        correctAnswers++;
+      } else {
+        selectedOption.classList.add('incorrect');
+      }
+     
+      document.querySelectorAll(`#question${questionNumber} .option`).forEach(option => {
+        option.style.pointerEvents = 'none';
+      });
+    }
+
+    function nextQuestion() {
+    
+      document.getElementById(`question${currentQuestion}`).style.display = 'none';
+
+
+      currentQuestion++;
+
+      
+      const nextQuestionElement = document.getElementById(`question${currentQuestion}`);
+      if (nextQuestionElement) {
+        nextQuestionElement.style.display = 'block';
+      } else {
+
+        document.getElementById('next-button').style.display = 'none';
+        document.getElementById('prev-button').style.display = 'none';
+        displayResult();
+      }
+    }
+
+    function previousQuestion() {
+      if (currentQuestion > 1) {
+        
+        document.getElementById(`question${currentQuestion}`).style.display = 'none';
+
+
+        currentQuestion--;
+
+      
+        const prevQuestionElement = document.getElementById(`question${currentQuestion}`);
+        prevQuestionElement.style.display = 'block';
+      }
+    }
+
+    function displayResult() {
+      const resultMessage = document.getElementById('result-message');
+      resultMessage.textContent = `You got ${correctAnswers} out of ${currentQuestion - 1} questions correct!`;
+      document.getElementById('result').style.display = 'Block';
+    }
+  </script>
+</body>
+</html>
